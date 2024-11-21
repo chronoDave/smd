@@ -1,0 +1,33 @@
+{
+  "name": "smd",
+  "version": "0.0.1",
+  "description": "Simple (Common) Markdown parser",
+  "author": "Chronocide",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "types": "dist/smd.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/smd.js",
+      "require": "./dist/smd.cjs"
+    }
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chronoDave/smd.git"
+  },
+  "scripts": {},
+  "devDependencies": {
+    "@chronocide/eslint-config": "github:chronoDave/eslint-config",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.15.0",
+    "rollup": "^4.27.3",
+    "rollup-plugin-dts": "^6.1.1",
+    "rollup-plugin-esbuild": "^6.1.1",
+    "tape": "^5.9.0",
+    "typescript": "^5.6.3"
+  }
+}
