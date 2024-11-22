@@ -1,6 +1,6 @@
-import type { Type } from './token';
+import type { Type } from '../token/token';
 
-import token from './token';
+import token from '../token/token';
 
 export type Position = { start: number; line: number; size: number };
 
