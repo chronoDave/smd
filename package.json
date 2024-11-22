@@ -19,9 +19,12 @@
     "type": "git",
     "url": "git+https://github.com/chronoDave/smd.git"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "node scripts/tape.js && tape build/**/*.spec.js"
+  },
   "devDependencies": {
     "@chronocide/eslint-config": "github:chronoDave/eslint-config",
+    "@types/tape": "^5.6.4",
     "esbuild": "^0.24.0",
     "eslint": "^9.15.0",
     "rollup": "^4.27.3",
