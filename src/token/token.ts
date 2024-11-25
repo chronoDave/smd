@@ -12,7 +12,8 @@ export type Type =
   'h4' |
   'h5' |
   'h6' |
-  'li' |
+  'uli' |
+  'oli' |
   'label' |
   'blockquote' |
   'bold' |
@@ -45,11 +46,12 @@ export default (x: string): Token | null => {
   if (x.startsWith(LINE_FEED)) return { type: 'newline', size: r(LINE_FEED)(x) };
   if (x.startsWith(CARRIAGE_RETURN)) return { type: 'newline', size: r(CARRIAGE_RETURN)(x) };
   if (x.startsWith('>')) return { type: 'blockquote', size: r('>')(x) };
+  if (/[0-9](\)|\.)/.test(x.slice(0, 2))) return { type: 'oli', size: 2 };
 
   // Escape
   if (x.startsWith('\\')) return { type: 'backslash', size: r('\\')(x) };
 
-  // Thematic break
+  // Thematic break / list item
   if (x.startsWith('-')) {
     const dash = r('-')(x);
     const thematicBreak = hr('-')(x);
@@ -57,21 +59,26 @@ export default (x: string): Token | null => {
     if (thematicBreak > dash) {
       return { type: 'hr', size: thematicBreak };
     } else {
-      if (dash === 1) return { type: 'li', size: dash };
+      if (dash === 1) return { type: 'uli', size: dash };
       return { type: 'setext_heading_underline', size: dash };
     }
   }
 
   if (x.startsWith('*')) {
     const size = hr('*')(x);
-    if (size === 1) return { type: 'li', size };
+    if (size === 1) return { type: 'uli', size };
     if (size >= 3) return { type: 'hr', size };
   }
 
   if (x.startsWith('_')) {
     const size = hr('_')(x);
-    if (size === 1) return { type: 'li', size };
+    if (size === 1) return { type: 'uli', size };
     if (size >= 3) return { type: 'hr', size };
+  }
+
+  if (x.startsWith('+')) {
+    const size = r('+')(x);
+    if (size === 1) return { type: 'uli', size };
   }
 
   // ATX headings
@@ -86,6 +93,7 @@ export default (x: string): Token | null => {
   // Code block
   if (x.startsWith('`')) {
     const size = r('`')(x);
+    if (size === 1) return { type: 'code', size };
     if (size > 3) return { type: 'codeblock', size };
   }
 
