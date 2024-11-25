@@ -1,7 +1,8 @@
 import r from './tokens/repeat';
+import c from './tokens/contain';
 import heading from './tokens/heading';
 import hr from './tokens/hr';
-import label from './tokens/label';
+import li from './tokens/li';
 
 import { TAB, SPACE, LINE_FEED, CARRIAGE_RETURN } from './characters';
 
@@ -12,14 +13,21 @@ export type Type =
   'h4' |
   'h5' |
   'h6' |
-  'uli' |
-  'oli' |
-  'label' |
+  'li-number' |
+  'li-plus' |
+  'li-star' |
+  'li-dash' |
+  'em' |
+  'strong' |
+  'strike' | 
   'blockquote' |
   'bold' |
   'setext_heading_underline' |
   'backslash' |
-  'link_label' |
+  'title' |
+  'text' |
+  'uri' |
+  'img' |
   'hr' |
   'dash' |
   'space' |
@@ -37,7 +45,6 @@ export default (x: string): Token | null => {
   // Whitespace
   if (x.startsWith(SPACE)) {
     const size = r(SPACE)(x);
-
     if (size >= 4) return { type: 'codeblock', size };
     return { type: 'space', size };
   }
@@ -46,40 +53,43 @@ export default (x: string): Token | null => {
   if (x.startsWith(LINE_FEED)) return { type: 'newline', size: r(LINE_FEED)(x) };
   if (x.startsWith(CARRIAGE_RETURN)) return { type: 'newline', size: r(CARRIAGE_RETURN)(x) };
   if (x.startsWith('>')) return { type: 'blockquote', size: r('>')(x) };
-  if (/[0-9](\)|\.)/.test(x.slice(0, 2))) return { type: 'oli', size: 2 };
 
   // Escape
   if (x.startsWith('\\')) return { type: 'backslash', size: r('\\')(x) };
 
-  // Thematic break / list item
+  // Thematic break
   if (x.startsWith('-')) {
-    const dash = r('-')(x);
-    const thematicBreak = hr('-')(x);
-
-    if (thematicBreak > dash) {
-      return { type: 'hr', size: thematicBreak };
-    } else {
-      if (dash === 1) return { type: 'uli', size: dash };
-      return { type: 'setext_heading_underline', size: dash };
-    }
-  }
-
-  if (x.startsWith('*')) {
-    const size = hr('*')(x);
-    if (size === 1) return { type: 'uli', size };
-    if (size >= 3) return { type: 'hr', size };
+    const size = hr('-')(x);
+    if (size !== null) return { type: 'hr', size };
   }
 
   if (x.startsWith('_')) {
     const size = hr('_')(x);
-    if (size === 1) return { type: 'uli', size };
-    if (size >= 3) return { type: 'hr', size };
+    if (size !== null) return { type: 'hr', size };
+  }
+
+  if (x.startsWith('*')) {
+    const size = hr('*')(x);
+    if (size !== null) return { type: 'hr', size };
+  }
+
+  // List item
+  if (x.startsWith('-')) {
+    const size = li(x);
+    if (size !== null) return { type: 'li-dash', size };
+  }
+
+  if (x.startsWith('*')) {
+    const size = li(x);
+    if (size !== null) return { type: 'li-star', size };
   }
 
   if (x.startsWith('+')) {
-    const size = r('+')(x);
-    if (size === 1) return { type: 'uli', size };
+    const size = li(x);
+    if (size !== null) return { type: 'li-plus', size };
   }
+
+  if (/[0-9a-zA-Z](\)|\.)/.test(x.slice(0, 2))) return { type: 'li-number', size: 2 };
 
   // ATX headings
   if (x.startsWith('#')) {
@@ -99,13 +109,41 @@ export default (x: string): Token | null => {
 
   if (x.startsWith('~')) {
     const size = r('~')(x);
+    if (size === 1) return { type: 'strike', size };
     if (size > 3) return { type: 'codeblock', size };
+  }
+
+  // Emphasis
+  if (x.startsWith('_')) {
+    const size = r('_')(x);
+    if (size === 1) return { type: 'em', size };
+  }
+
+  // Strong
+  if (x.startsWith('*')) {
+    const size = r('*')(x);
+    if (size === 1) return { type: 'bold', size };
   }
 
   // Label
   if (x.startsWith('[')) {
-    const size = label(x);
-    if (size !== null) return { type: 'label', size };
+    const size = c(']')(x);
+    if (size !== null) return { type: 'text', size };
+  }
+
+  if (x.startsWith('(')) {
+    const size = c(')')(x);
+    if (size !== null) return { type: 'uri', size };
+  }
+
+  if (x.startsWith('"')) {
+    const size = c('"')(x);
+    if (size !== null) return { type: 'title', size };
+  }
+
+  if (x.startsWith('!') && x[1] === '[') {
+    const size = c(']')(x.slice(1));
+    if (size !== null) return { type: 'img', size };
   }
 
   return null;

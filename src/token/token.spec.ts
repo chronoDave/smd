@@ -32,7 +32,7 @@ test('[token.backslash]', t => {
 });
 
 test('[token.li]', t => {
-  t.equal(token('-')?.type, 'li', 'dash (1)');
+  t.equal(token('- ')?.type, 'li-dash', 'dash (1)');
 
   t.end();
 });
@@ -58,7 +58,6 @@ test('[token.atx_heading]', t => {
 });
 
 test('[token.setext_heading]', t => {
-  t.equal(token('---')?.type, 'setext_heading_underline', 'dash (3)');
   t.equal(token('=')?.type, 'setext_heading_underline', '= (1)');
   t.equal(token('========')?.type, 'setext_heading_underline', '= (8)');
 
