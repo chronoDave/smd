@@ -1,6 +1,7 @@
 import r from './tokens/repeat';
-import h from './tokens/heading';
+import heading from './tokens/heading';
 import hr from './tokens/hr';
+import label from './tokens/label';
 
 import { TAB, SPACE, LINE_FEED, CARRIAGE_RETURN } from './characters';
 
@@ -12,9 +13,12 @@ export type Type =
   'h5' |
   'h6' |
   'li' |
+  'label' |
+  'blockquote' |
   'bold' |
   'setext_heading_underline' |
   'backslash' |
+  'link_label' |
   'hr' |
   'dash' |
   'space' |
@@ -40,6 +44,7 @@ export default (x: string): Token | null => {
   if (x.startsWith(TAB)) return { type: 'tab', size: r(TAB)(x) };
   if (x.startsWith(LINE_FEED)) return { type: 'newline', size: r(LINE_FEED)(x) };
   if (x.startsWith(CARRIAGE_RETURN)) return { type: 'newline', size: r(CARRIAGE_RETURN)(x) };
+  if (x.startsWith('>')) return { type: 'blockquote', size: r('>')(x) };
 
   // Escape
   if (x.startsWith('\\')) return { type: 'backslash', size: r('\\')(x) };
@@ -59,17 +64,19 @@ export default (x: string): Token | null => {
 
   if (x.startsWith('*')) {
     const size = hr('*')(x);
+    if (size === 1) return { type: 'li', size };
     if (size >= 3) return { type: 'hr', size };
   }
 
   if (x.startsWith('_')) {
     const size = hr('_')(x);
+    if (size === 1) return { type: 'li', size };
     if (size >= 3) return { type: 'hr', size };
   }
 
   // ATX headings
   if (x.startsWith('#')) {
-    const size = h(x);
+    const size = heading(x);
     if (size !== null) return { type: `h${size}` as Token['type'], size };
   }
 
@@ -85,6 +92,12 @@ export default (x: string): Token | null => {
   if (x.startsWith('~')) {
     const size = r('~')(x);
     if (size > 3) return { type: 'codeblock', size };
+  }
+
+  // Label
+  if (x.startsWith('[')) {
+    const size = label(x);
+    if (size !== null) return { type: 'label', size };
   }
 
   return null;

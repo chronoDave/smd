@@ -71,3 +71,10 @@ test('[token.code_block]', t => {
 
   t.end();
 });
+
+test('[token.blockquote]', t => {
+  t.equal(token('>')?.type, 'blockquote', '> (1)');
+  t.equal(token('>>>>')?.type, 'blockquote', '> (4)');
+
+  t.end();
+});
