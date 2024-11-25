@@ -5,11 +5,11 @@ export type Lexeme =
   'h3' |
   'h4' |
   'h5' |
-  'h6';
+  'h6' |
+  'sh1' |
+  'sh2';
 
 export type Token = {
   lexeme: Lexeme;
   size: number;
-  open: string;
-  close?: string;
 };
