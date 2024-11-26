@@ -1,8 +1,8 @@
 import test from 'tape';
 
-import h from './h';
+import h from './atx-heading';
 
-test('[h]', t => {
+test('[atx-heading]', t => {
   const pass = (x: string) => t.true(h(x), x);
   const fail = (x: string) => t.false(h(x), x);
 

@@ -1,8 +1,8 @@
 import test from 'tape';
 
-import sh from './sh';
+import sh from './setext-heading';
 
-test('[sh]', t => {
+test('[setext-heading]', t => {
   const pass = (x: string) => t.true(sh(x), x);
   const fail = (x: string) => t.false(sh(x), x);
 

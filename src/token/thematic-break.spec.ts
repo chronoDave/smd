@@ -1,8 +1,8 @@
 import test from 'tape';
 
-import hr from './hr';
+import hr from './thematic-break';
 
-test('[hr]', t => {
+test('[thematic-break]', t => {
   const pass = (x: string) => t.true(hr(x), x);
   const fail = (x: string) => t.false(hr(x), x);
 
