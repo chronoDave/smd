@@ -8,7 +8,8 @@ export type Lexeme =
   'h6' |
   'sh1' |
   'sh2' |
-  'codeblock';
+  'codeblock' |
+  'blockquote';
 
 export type Token = {
   lexeme: Lexeme;

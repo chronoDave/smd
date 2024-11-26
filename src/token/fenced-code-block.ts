@@ -1,7 +1,7 @@
 import type { Token } from '../types';
 
 /**
- * @see https://spec.commonmark.org/0.31.2/#indented-code-blocks
+ * @see https://spec.commonmark.org/0.31.2/#fenced-code-blocks
 */
 export default (x: string): Token | null => {
   const match = /^\s{0,3}((`{3,}(.*[^`])?)|(~{3,}.*))$/.exec(x);
