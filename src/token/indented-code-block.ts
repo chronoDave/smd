@@ -7,5 +7,5 @@ export default (x: string): Token | null => {
   const match = /^\s{4,}/.exec(x);
   if (!match) return null;
 
-  return { lexeme: 'codeblock', size: match[0].length };
+  return { lexeme: 'codeblock', raw: x.slice(0, match[0].length) };
 };

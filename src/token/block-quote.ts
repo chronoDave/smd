@@ -7,5 +7,5 @@ export default (x: string): Token | null => {
   const match = /^\s{0,3}>.*$/.exec(x);
   if (!match) return null;
 
-  return { lexeme: 'blockquote', size: match[0].length };
+  return { lexeme: 'blockquote', raw: x.slice(0, match[0].length) };
 };

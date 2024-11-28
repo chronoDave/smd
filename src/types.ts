@@ -9,9 +9,13 @@ export type Lexeme =
   'sh1' |
   'sh2' |
   'codeblock' |
-  'blockquote';
+  'blockquote' |
+  'ul-list-item' |
+  'ol-list-item' |
+  'newline' |
+  'raw';
 
 export type Token = {
   lexeme: Lexeme;
-  size: number;
+  raw: string;
 };

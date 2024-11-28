@@ -8,5 +8,5 @@ export default (x: string): Token | null => {
   if (!match) return null;
 
   const lexeme = `h${match[1].length}` as Token['lexeme'];
-  return { lexeme, size: match[0].length };
+  return { lexeme, raw: x.slice(0, match[0].length) };
 };
